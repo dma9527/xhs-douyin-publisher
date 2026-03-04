@@ -46,7 +46,23 @@ kiro-cli chat
 /agent swap xhs-douyin-publisher
 ```
 
-然后直接说：
+### 首次使用 — 引导配置
+
+第一次启动 agent 时，它会自动检测到你还没有配置，然后通过对话一步步引导你：
+
+```
+Agent: 👋 欢迎使用小红书/抖音发布助手！我需要先了解一下你的账号信息。
+Agent: 你的账号叫什么名字？
+You:   信号塔Tech
+Agent: 你的账号主要做什么领域？（如 AI科技/美食/穿搭/旅行/健身）
+You:   AI科技
+Agent: ...
+Agent: ✅ 配置完成！以后随时说 "更新配置" 来修改。
+```
+
+你也可以直接编辑配置文件：`~/.kiro/xhs-douyin-publisher/config.yaml`
+
+### 日常使用
 - "帮我写一篇关于 Claude 新功能的小红书"
 - "这个话题同时发小红书和抖音"
 - "搜索一下小红书上 AI 相关的热门帖子"
@@ -61,9 +77,27 @@ kiro-cli chat
 │       └── SKILL.md                # 小红书内容创作指南
 ├── mcp/
 │   └── mcp-config-example.json     # MCP 配置参考
+├── config.example.yaml             # 账号配置模板（带详细注释）
 ├── install.sh                      # 一键安装脚本
 └── README.md
 ```
+
+## 配置说明
+
+配置文件位于 `~/.kiro/xhs-douyin-publisher/config.yaml`，定义你的：
+
+| 配置项 | 说明 | 示例 |
+|--------|------|------|
+| `account.name` | 账号名称 | "信号塔Tech"、"小美食记" |
+| `niche.primary` | 主领域 | "AI科技"、"美食探店"、"穿搭" |
+| `niche.topics` | 具体话题 | ["大模型", "ChatGPT"] |
+| `style.tone` | 写作风格 | casual / professional / playful / minimal |
+| `style.perspective` | 独特视角 | "硅谷视角中文解读" |
+| `tags.always` | 固定标签 | ["AI", "科技"] |
+| `tags.pool` | 标签池 | ["人工智能", "ChatGPT", "大模型"] |
+| `publishing.preferred_slots` | 发布时段 | ["evening", "lunch"] |
+
+修改配置：直接编辑文件，或在 Kiro 中说 "更新配置" / "update config"。
 
 ## 工作流程
 

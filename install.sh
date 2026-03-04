@@ -4,6 +4,7 @@ set -e
 KIRO_DIR="${HOME}/.kiro"
 AGENTS_DIR="${KIRO_DIR}/agents"
 SKILLS_DIR="${KIRO_DIR}/skills"
+CONFIG_DIR="${KIRO_DIR}/xhs-douyin-publisher"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 echo "🚀 Installing xhs-douyin-publisher agent..."
@@ -11,12 +12,25 @@ echo "🚀 Installing xhs-douyin-publisher agent..."
 # Copy agent config
 mkdir -p "$AGENTS_DIR"
 cp "$SCRIPT_DIR/agents/xhs-douyin-publisher.json" "$AGENTS_DIR/"
-echo "✅ Agent config → $AGENTS_DIR/xhs-douyin-publisher.json"
+echo "✅ Agent config → $AGENTS_DIR/"
 
 # Copy skills
 mkdir -p "$SKILLS_DIR/xhs-content-creator"
 cp "$SCRIPT_DIR/skills/xhs-content-creator/SKILL.md" "$SKILLS_DIR/xhs-content-creator/"
-echo "✅ Skill → $SKILLS_DIR/xhs-content-creator/SKILL.md"
+echo "✅ Skill → $SKILLS_DIR/xhs-content-creator/"
+
+# Setup config directory
+mkdir -p "$CONFIG_DIR"
+if [ ! -f "$CONFIG_DIR/config.yaml" ]; then
+  cp "$SCRIPT_DIR/config.example.yaml" "$CONFIG_DIR/config.yaml"
+  echo "✅ Config template → $CONFIG_DIR/config.yaml"
+  echo ""
+  echo "📝 两种方式完成配置："
+  echo "   1. 直接编辑 $CONFIG_DIR/config.yaml"
+  echo "   2. 在 Kiro 中对 agent 说 \"帮我配置账号\"，它会引导你完成"
+else
+  echo "⏭️  Config already exists, skipping"
+fi
 
 # MCP reminder
 echo ""
