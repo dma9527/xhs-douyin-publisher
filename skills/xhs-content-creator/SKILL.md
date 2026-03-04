@@ -1,6 +1,10 @@
 ---
 name: xhs-content-creator
-description: 小红书科技内容创作 — 生成封面、文案、标签，适用于科技类账号发布
+description: 小红书科技内容创作 — 生成封面、文案、标签，适用于科技类账号发布。Use when creating Xiaohongshu posts, generating tech content, or writing XHS copy with proper title formulas, content structure, and tag strategies.
+metadata:
+  skillport:
+    category: content-creation
+    tags: [xiaohongshu, douyin, social-media, chinese, publishing]
 ---
 
 # 小红书科技内容创作 Skill

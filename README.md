@@ -2,19 +2,27 @@
 
 小红书 + 抖音内容发布 Agent，基于 [Kiro CLI](https://kiro.dev)。
 
+[![Add to Kiro](https://img.shields.io/badge/Add_to-Kiro-blue)](https://kiro.dev/launch/mcp/add?name=skillport&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22skillport-mcp%22%5D%2C%22env%22%3A%7B%22SKILLPORT_SKILLS_DIR%22%3A%22~/.skillport/skills%22%7D%7D)
+
 ## 功能
 
 - 🔴 **小红书**：自动发布（图文/视频），定时排期，标签优化
 - 🎵 **抖音**：内容生成 + 打包（需手动上传，无公开 API）
 - 🔄 **跨平台**：同一话题自动适配两个平台的风格差异
-- ✍️ **内容创作 Skill**：内置科技类小红书写作指南（标题公式、正文结构、标签策略）
-
-## 前置要求
-
-- [Kiro CLI](https://kiro.dev) 已安装
-- [xiaohongshu-mcp](https://github.com) 已配置（小红书自动发布需要）
+- ✍️ **内容创作 Skill**：内置小红书写作指南（标题公式、正文结构、标签策略）
+- 🧭 **引导式配置**：首次使用时 agent 对话引导你完成账号设置
 
 ## 安装
+
+### 方式 1：SkillPort（推荐）
+
+如果你已安装 [SkillPort](https://github.com/gotalab/skillport)：
+
+```bash
+skillport add dma9527/xhs-douyin-publisher skills
+```
+
+### 方式 2：一键脚本
 
 ```bash
 git clone https://github.com/dma9527/xhs-douyin-publisher.git
@@ -22,22 +30,33 @@ cd xhs-douyin-publisher
 ./install.sh
 ```
 
-安装脚本会将 agent 和 skill 复制到 `~/.kiro/` 对应目录。
+脚本会自动安装 agent、skill，并引导你配置小红书 MCP server。
 
-### 手动配置 MCP
+### 方式 3：手动安装
 
-将 `mcp/mcp-config-example.json` 中的内容合并到你的 `~/.kiro/settings/mcp.json`：
+```bash
+# Agent
+cp agents/xhs-douyin-publisher.json ~/.kiro/agents/
 
-```json
-{
-  "mcpServers": {
-    "xiaohongshu-mcp": {
-      "command": "npx",
-      "args": ["-y", "xiaohongshu-mcp"]
-    }
-  }
-}
+# Skill
+mkdir -p ~/.kiro/skills/xhs-content-creator
+cp skills/xhs-content-creator/SKILL.md ~/.kiro/skills/xhs-content-creator/
+
+# Config
+mkdir -p ~/.kiro/xhs-douyin-publisher
+cp config.example.yaml ~/.kiro/xhs-douyin-publisher/config.yaml
 ```
+
+## 小红书 MCP Server
+
+自动发布功能需要一个 xiaohongshu MCP server。推荐选项：
+
+| 项目 | 语言 | 特点 | 链接 |
+|------|------|------|------|
+| **xpzouying/xiaohongshu-mcp** ⭐ | Python | 功能最全，活跃维护，creator 工作流 | [GitHub](https://github.com/xpzouying/xiaohongshu-mcp) |
+| 1uokun/xiaohongshu-mcp-js | Node.js | 轻量，支持发布+登录 | [GitHub](https://github.com/1uokun/xiaohongshu-mcp-js) |
+
+运行 `./install.sh` 时会引导你选择和配置。
 
 ## 使用
 
@@ -48,24 +67,36 @@ kiro-cli chat
 
 ### 首次使用 — 引导配置
 
-第一次启动 agent 时，它会自动检测到你还没有配置，然后通过对话一步步引导你：
+Agent 会自动检测到你还没有配置，通过对话一步步引导你：
 
 ```
-Agent: 👋 欢迎使用小红书/抖音发布助手！我需要先了解一下你的账号信息。
+Agent: 👋 欢迎！我需要先了解一下你的账号信息。
 Agent: 你的账号叫什么名字？
 You:   信号塔Tech
-Agent: 你的账号主要做什么领域？（如 AI科技/美食/穿搭/旅行/健身）
+Agent: 你的账号主要做什么领域？
 You:   AI科技
-Agent: ...
-Agent: ✅ 配置完成！以后随时说 "更新配置" 来修改。
+Agent: ✅ 配置完成！随时说 "更新配置" 来修改。
 ```
 
-你也可以直接编辑配置文件：`~/.kiro/xhs-douyin-publisher/config.yaml`
+也可以直接编辑：`~/.kiro/xhs-douyin-publisher/config.yaml`
 
 ### 日常使用
+
 - "帮我写一篇关于 Claude 新功能的小红书"
 - "这个话题同时发小红书和抖音"
 - "搜索一下小红书上 AI 相关的热门帖子"
+
+## 配置说明
+
+| 配置项 | 说明 | 示例 |
+|--------|------|------|
+| `account.name` | 账号名称 | "信号塔Tech"、"小美食记" |
+| `niche.primary` | 主领域 | "AI科技"、"美食探店"、"穿搭" |
+| `niche.topics` | 具体话题 | ["大模型", "ChatGPT"] |
+| `style.tone` | 写作风格 | casual / professional / playful / minimal |
+| `tags.always` | 固定标签 | ["AI", "科技"] |
+| `tags.pool` | 标签池 | ["人工智能", "ChatGPT"] |
+| `publishing.preferred_slots` | 发布时段 | ["evening", "lunch"] |
 
 ## 项目结构
 
@@ -74,44 +105,13 @@ Agent: ✅ 配置完成！以后随时说 "更新配置" 来修改。
 │   └── xhs-douyin-publisher.json   # Agent 配置
 ├── skills/
 │   └── xhs-content-creator/
-│       └── SKILL.md                # 小红书内容创作指南
+│       └── SKILL.md                # 小红书内容创作指南（SkillPort 兼容）
 ├── mcp/
 │   └── mcp-config-example.json     # MCP 配置参考
-├── config.example.yaml             # 账号配置模板（带详细注释）
+├── config.example.yaml             # 账号配置模板
 ├── install.sh                      # 一键安装脚本
 └── README.md
 ```
-
-## 配置说明
-
-配置文件位于 `~/.kiro/xhs-douyin-publisher/config.yaml`，定义你的：
-
-| 配置项 | 说明 | 示例 |
-|--------|------|------|
-| `account.name` | 账号名称 | "信号塔Tech"、"小美食记" |
-| `niche.primary` | 主领域 | "AI科技"、"美食探店"、"穿搭" |
-| `niche.topics` | 具体话题 | ["大模型", "ChatGPT"] |
-| `style.tone` | 写作风格 | casual / professional / playful / minimal |
-| `style.perspective` | 独特视角 | "硅谷视角中文解读" |
-| `tags.always` | 固定标签 | ["AI", "科技"] |
-| `tags.pool` | 标签池 | ["人工智能", "ChatGPT", "大模型"] |
-| `publishing.preferred_slots` | 发布时段 | ["evening", "lunch"] |
-
-修改配置：直接编辑文件，或在 Kiro 中说 "更新配置" / "update config"。
-
-## 工作流程
-
-### 小红书（自动发布）
-
-1. 告诉 agent 你想发什么 → 生成标题 + 文案 + 标签
-2. 预览确认 → 你说 OK 才会发
-3. 自动排期到北京时间高峰时段（08:00 / 12:00 / 20:00 / 21:30）
-
-### 抖音（内容准备）
-
-1. 告诉 agent 你想发什么 → 生成标题 + 文案 + 标签 + 封面建议
-2. 所有素材保存到 `social/{date}/douyin/` 目录
-3. 你手动上传到抖音 app
 
 ## License
 
@@ -121,29 +121,35 @@ MIT
 
 # xhs-douyin-publisher (English)
 
-A Kiro CLI agent for publishing content to Xiaohongshu (小红书) and Douyin (抖音).
+Kiro CLI agent for publishing content to Xiaohongshu (小红书) and Douyin (抖音).
 
 ## Features
 
-- 🔴 **Xiaohongshu**: Auto-publish (image/video posts), scheduled posting, tag optimization
-- 🎵 **Douyin**: Content generation + packaging (manual upload required, no public API)
-- 🔄 **Cross-platform**: Adapts same topic for both platforms' style differences
-- ✍️ **Content creation skill**: Built-in writing guide for tech content on XHS
-
-## Prerequisites
-
-- [Kiro CLI](https://kiro.dev) installed
-- [xiaohongshu-mcp](https://github.com) configured (required for XHS auto-publish)
+- 🔴 **Xiaohongshu**: Auto-publish with scheduled posting and tag optimization
+- 🎵 **Douyin**: Content generation + packaging (manual upload, no public API)
+- 🔄 **Cross-platform**: Adapts content for each platform's style
+- ✍️ **Writing skill**: Built-in XHS content creation guide
+- 🧭 **Guided setup**: Agent walks you through account configuration on first use
 
 ## Install
 
 ```bash
+# Via SkillPort (recommended)
+skillport add dma9527/xhs-douyin-publisher skills
+
+# Or via script
 git clone https://github.com/dma9527/xhs-douyin-publisher.git
-cd xhs-douyin-publisher
-./install.sh
+cd xhs-douyin-publisher && ./install.sh
 ```
 
-Then manually merge `mcp/mcp-config-example.json` into your `~/.kiro/settings/mcp.json`.
+## XHS MCP Server
+
+Auto-publishing requires a xiaohongshu MCP server:
+
+| Project | Recommended | Link |
+|---------|-------------|------|
+| **xpzouying/xiaohongshu-mcp** | ⭐ Yes | [GitHub](https://github.com/xpzouying/xiaohongshu-mcp) |
+| 1uokun/xiaohongshu-mcp-js | | [GitHub](https://github.com/1uokun/xiaohongshu-mcp-js) |
 
 ## Usage
 

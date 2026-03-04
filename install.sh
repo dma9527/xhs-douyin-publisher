@@ -44,11 +44,11 @@ else
   echo "小红书自动发布需要 xiaohongshu MCP server。"
   echo "目前有几个社区实现可选："
   echo ""
-  echo "  1) 1uokun/xiaohongshu-mcp-js  (Node.js, 支持发布+登录)"
-  echo "     → github.com/1uokun/xiaohongshu-mcp-js"
+  echo "  1) xpzouying/xiaohongshu-mcp  ⭐推荐 (Python, 功能最全, 活跃维护)"
+  echo "     → github.com/xpzouying/xiaohongshu-mcp"
   echo ""
-  echo "  2) algovate/xhs-mcp  (npx 一键启动)"
-  echo "     → github.com/AiGovate/xhs-mcp"
+  echo "  2) 1uokun/xiaohongshu-mcp-js  (Node.js, 支持发布+登录)"
+  echo "     → github.com/1uokun/xiaohongshu-mcp-js"
   echo ""
   echo "  3) 手动配置 (我已经有自己的 XHS MCP server)"
   echo ""
@@ -59,18 +59,25 @@ else
   case "$choice" in
     1)
       echo ""
-      echo "📦 安装 1uokun/xiaohongshu-mcp-js..."
+      echo "📦 xpzouying/xiaohongshu-mcp (推荐)"
       echo ""
-      echo "请先在另一个终端运行："
-      echo "  git clone https://github.com/1uokun/xiaohongshu-mcp-js.git"
-      echo "  cd xiaohongshu-mcp-js && npm install && npm start"
+      echo "安装方式："
+      echo "  git clone https://github.com/xpzouying/xiaohongshu-mcp.git"
+      echo "  cd xiaohongshu-mcp && pip install -e . && python -m xiaohongshu_mcp"
       echo ""
-      read -p "服务启动后的地址 (默认 http://localhost:3000/mcp): " mcp_url
-      mcp_url="${mcp_url:-http://localhost:3000/mcp}"
+      echo "或使用 Docker："
+      echo "  docker run -p 18060:18060 xpzouying/xiaohongshu-mcp"
+      echo ""
+      read -p "服务地址 (默认 http://localhost:18060/mcp): " mcp_url
+      mcp_url="${mcp_url:-http://localhost:18060/mcp}"
       ;;
     2)
       echo ""
-      echo "📦 algovate/xhs-mcp 使用 npx 启动，无需手动安装。"
+      echo "📦 1uokun/xiaohongshu-mcp-js (Node.js)"
+      echo ""
+      echo "安装方式："
+      echo "  git clone https://github.com/1uokun/xiaohongshu-mcp-js.git"
+      echo "  cd xiaohongshu-mcp-js && npm install && npm start"
       echo ""
       read -p "服务地址 (默认 http://localhost:3000/mcp): " mcp_url
       mcp_url="${mcp_url:-http://localhost:3000/mcp}"
