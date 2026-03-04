@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "xiaohongshu-mcp": {
+      "command": "npx",
+      "args": ["-y", "xiaohongshu-mcp"],
+      "_comment": "Replace with actual xiaohongshu-mcp package/command. Check https://github.com for the latest installation method."
+    }
+  }
+}
